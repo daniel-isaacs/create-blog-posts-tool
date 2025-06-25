@@ -459,7 +459,7 @@ app.post('/api/create-all-blogs', async (req, res) => {
             
             try {
                 // First, parse the URL content
-                const parseResponse = await fetch(`http://localhost:${port}/api/parse-url`, {
+                const parseResponse = await fetch(`${req.headers.origin || 'https://' + req.headers.host}/api/parse-url`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
