@@ -70,9 +70,14 @@ const decodeHtmlEntities = (text) => {
         .replace(/&#x([0-9A-Fa-f]+);/g, (match, hex) => String.fromCharCode(parseInt(hex, 16)));
 };
 
+// // Serve the HTML file from the create-content folder
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'create-content', 'create-content.html'));
+// });
+
 // Serve the HTML file from the create-content folder
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'create-content', 'create-content.html'));
+    res.sendFile('index.html');
 });
 
 // Proxy endpoint for parsing URL content
