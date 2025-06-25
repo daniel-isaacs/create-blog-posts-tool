@@ -2,7 +2,7 @@
   "name": "optimizely-blog-creator",
   "version": "1.0.0",
   "description": "Simple UI for creating blog posts in Optimizely CMS",
-  "main": "index.html",
+  "main": "server.js",
   "scripts": {
     "dev": "vercel dev",
     "build": "echo 'No build step required'",
