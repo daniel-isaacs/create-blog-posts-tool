@@ -69,13 +69,18 @@ export default async function handler(req, res) {
         const results = [];
         const errors = [];
 
+        // Get the base URL more reliably
+        const baseUrl = process.env.VERCEL_URL 
+          ? `https://${process.env.VERCEL_URL}` 
+          : req.headers.origin || `https://${req.headers.host}`;
+
         for (let i = 0; i < urls.length; i++) {
             const url = urls[i];
             console.log(`\n=== Processing blog ${i + 1}/${urls.length}: ${url} ===`);
             
             try {
                 // Call parse-url API using the current domain
-                const parseResponse = await fetch(`${req.headers.origin || 'https://' + req.headers.host}/api/parse-url`, {
+                const parseResponse = await fetch(`${baseUrl}/api/parse-url`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

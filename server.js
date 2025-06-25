@@ -459,7 +459,12 @@ app.post('/api/create-all-blogs', async (req, res) => {
             
             try {
                 // First, parse the URL content
-                const parseResponse = await fetch(`${req.headers.origin || 'https://' + req.headers.host}/api/parse-url`, {
+                // Get the base URL more reliably
+                const baseUrl = process.env.VERCEL_URL 
+                  ? `https://${process.env.VERCEL_URL}` 
+                  : req.headers.origin || `https://${req.headers.host}`;
+
+                const parseResponse = await fetch(`${baseUrl}/api/parse-url`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
