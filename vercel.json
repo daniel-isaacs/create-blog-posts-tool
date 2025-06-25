@@ -13,7 +13,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/create-content/create-content.html"
+      "dest": "/index.html"
     }
   ]
 }
