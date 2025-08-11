@@ -6,6 +6,10 @@
       "dest": "/api/$1"
     },
     {
+      "src": "/xml-create.html",
+      "dest": "/xml-create.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
