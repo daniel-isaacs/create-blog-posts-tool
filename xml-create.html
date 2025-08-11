@@ -332,6 +332,37 @@
         
         let authToken = null;
         let parsedArticles = [];
+        let config = {}; // Store configuration from server
+        
+        // Load configuration on page load
+        async function loadConfig() {
+            try {
+                const response = await fetch('/api/config');
+                if (response.ok) {
+                    config = await response.json();
+                    
+                    // Populate the form fields with config values if they're empty
+                    if (!document.getElementById('cmsUrl').value && config.cmsUrl) {
+                        document.getElementById('cmsUrl').value = config.cmsUrl;
+                    }
+                    if (!document.getElementById('clientId').value && config.clientId) {
+                        document.getElementById('clientId').value = config.clientId;
+                    }
+                    if (!document.getElementById('clientSecret').value && config.clientSecret) {
+                        document.getElementById('clientSecret').value = config.clientSecret;
+                    }
+                    if (!document.getElementById('containerUuid').value && config.containerUuid) {
+                        document.getElementById('containerUuid').value = config.containerUuid;
+                    }
+                    
+                    log('Configuration loaded from server', 'success');
+                } else {
+                    log('Failed to load configuration from server', 'error');
+                }
+            } catch (error) {
+                log(`Error loading configuration: ${error.message}`, 'error');
+            }
+        }
         
         function log(message, type = 'info') {
             const logArea = document.getElementById('logArea');
@@ -617,11 +648,11 @@
         
         // Authentication functions
         async function getAuthToken() {
-            // Get configuration values from the form
-            CMS_BASE_URL = document.getElementById('cmsUrl').value.trim();
-            CLIENT_ID = document.getElementById('clientId').value.trim();
-            CLIENT_SECRET = document.getElementById('clientSecret').value.trim();
-            CONTAINER_UUID = document.getElementById('containerUuid').value.trim();
+            // Get configuration values from the form or config
+            CMS_BASE_URL = document.getElementById('cmsUrl').value.trim() || config.cmsUrl || '';
+            CLIENT_ID = document.getElementById('clientId').value.trim() || config.clientId || '';
+            CLIENT_SECRET = document.getElementById('clientSecret').value.trim() || config.clientSecret || '';
+            CONTAINER_UUID = document.getElementById('containerUuid').value.trim() || config.containerUuid || '';
             
             // Validate configuration
             if (!CMS_BASE_URL || !CLIENT_ID || !CLIENT_SECRET || !CONTAINER_UUID) {
@@ -751,9 +782,9 @@
         }
         
         async function createBlogPost(article) {
-            // Ensure we have the latest configuration values
-            CMS_BASE_URL = document.getElementById('cmsUrl').value.trim().replace(/\/$/, '');
-            CONTAINER_UUID = document.getElementById('containerUuid').value.trim();
+            // Ensure we have the latest configuration values from form or config
+            CMS_BASE_URL = (document.getElementById('cmsUrl').value.trim() || config.cmsUrl || '').replace(/\/$/, '');
+            CONTAINER_UUID = document.getElementById('containerUuid').value.trim() || config.containerUuid || '';
             
             const contentTypeName = document.getElementById('contentTypeName').value;
             
@@ -849,10 +880,13 @@
         document.getElementById('createAllButton').addEventListener('click', createAllPosts);
         document.getElementById('clearButton').addEventListener('click', clearLog);
         
-        // Initialize
-        log('XML Blog Post Creator initialized and ready!');
-        log('Upload an XML file to get started.');
-        updateButtonStates();
+        // Initialize on page load
+        window.addEventListener('load', async () => {
+            await loadConfig(); // Load configuration first
+            log('XML Blog Post Creator initialized and ready!');
+            log('Upload an XML file to get started.');
+            updateButtonStates();
+        });
     </script>
 </body>
 </html>
