@@ -341,19 +341,8 @@
                 if (response.ok) {
                     config = await response.json();
                     
-                    // Populate the form fields with config values if they're empty
-                    if (!document.getElementById('cmsUrl').value && config.cmsUrl) {
-                        document.getElementById('cmsUrl').value = config.cmsUrl;
-                    }
-                    if (!document.getElementById('clientId').value && config.clientId) {
-                        document.getElementById('clientId').value = config.clientId;
-                    }
-                    if (!document.getElementById('clientSecret').value && config.clientSecret) {
-                        document.getElementById('clientSecret').value = config.clientSecret;
-                    }
-                    if (!document.getElementById('containerUuid').value && config.containerUuid) {
-                        document.getElementById('containerUuid').value = config.containerUuid;
-                    }
+                    // Store config values for use as fallbacks, but don't display them in the form
+                    // The config values will be used when getAuthToken() or createBlogPost() are called
                     
                     log('Configuration loaded from server', 'success');
                 } else {
