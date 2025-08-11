@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BlogPosts>
+  <BlogPostPage>
+    <contentType>BlogPostPage</contentType>
+    <displayName>Getting Started with Optimizely CMS API</displayName>
+    <Heading>Getting Started with Optimizely CMS API</Heading>
+    <author>John Developer</author>
+    <SubHeading>Learn how to use the Optimizely CMS API to create and manage content programmatically. This comprehensive guide covers authentication, content creation, and best practices.</SubHeading>
+    <content><![CDATA[
+      <h2>Introduction</h2>
+      <p>The Optimizely CMS API provides a powerful way to manage content programmatically. Whether you're building integrations, automating content workflows, or creating headless applications, the API gives you full control over your content.</p>
+      
+      <h2>Key Features</h2>
+      <ul>
+        <li>RESTful API for easy integration</li>
+        <li>Support for all content types</li>
+        <li>Authentication via OAuth 2.0</li>
+        <li>Comprehensive content management capabilities</li>
+      </ul>
+      
+      <h2>Getting Started</h2>
+      <p>To get started with the API, you'll need to set up authentication and install the necessary SDK packages. This article will guide you through the process step by step.</p>
+      
+      <blockquote>
+        <p>Remember to always follow security best practices when working with API credentials.</p>
+      </blockquote>
+    ]]></content>
+    <pubDate>2025-08-11T10:00:00Z</pubDate>
+    <promoImage>c78900d7-bb25-412d-b20b-3a53b42ceae1</promoImage>
+  </BlogPostPage>
+
+  <BlogPostPage>
+    <contentType>BlogPostPage</contentType>
+    <displayName>Advanced Content Management Techniques</displayName>
+    <Heading>Advanced Content Management Techniques</Heading>
+    <author>Sarah Wilson</author>
+    <SubHeading>Explore advanced techniques for managing content at scale, including bulk operations, content relationships, and automated workflows.</SubHeading>
+    <content><![CDATA[
+      <h2>Bulk Operations</h2>
+      <p>When managing large amounts of content, bulk operations become essential. The Optimizely CMS API supports various bulk operations that can save you significant time and effort.</p>
+      
+      <h2>Content Relationships</h2>
+      <p>Understanding how to properly establish and maintain relationships between content items is crucial for building robust content architectures.</p>
+      
+      <h2>Automated Workflows</h2>
+      <p>Learn how to set up automated workflows that can handle content approval, publishing, and archival processes without manual intervention.</p>
+      
+      <h2>Performance Optimization</h2>
+      <ul>
+        <li>Implement caching strategies</li>
+        <li>Use efficient query patterns</li>
+        <li>Optimize content structure</li>
+        <li>Monitor API usage</li>
+      </ul>
+    ]]></content>
+    <pubDate>2025-08-10T14:30:00Z</pubDate>
+    <promoImage>348f2f32-c9b9-44c8-ab69-f9a734c1067c</promoImage>
+  </BlogPostPage>
+
+  <BlogPostPage>
+    <contentType>BlogPostPage</contentType>
+    <displayName>Security Best Practices for CMS APIs</displayName>
+    <Heading>Security Best Practices for CMS APIs</Heading>
+    <author>Mikaela Thompson</author>
+    <SubHeading>Essential security practices to protect your CMS API integrations and ensure data integrity across your content management workflows.</SubHeading>
+    <content><![CDATA[
+      <h2>Authentication & Authorization</h2>
+      <p>Proper authentication and authorization are the foundation of API security. Always use OAuth 2.0 with appropriate scopes and regularly rotate your credentials.</p>
+      
+      <h2>Data Validation</h2>
+      <p>Implement comprehensive input validation to prevent injection attacks and ensure data integrity:</p>
+      <ul>
+        <li>Validate all input parameters</li>
+        <li>Sanitize user-generated content</li>
+        <li>Use parameterized queries</li>
+        <li>Implement rate limiting</li>
+      </ul>
+      
+      <h2>Secure Communication</h2>
+      <p>Always use HTTPS for API communications and implement proper certificate validation. Never transmit sensitive data over unencrypted connections.</p>
+      
+      <h2>Monitoring & Logging</h2>
+      <p>Implement comprehensive logging and monitoring to detect suspicious activities and maintain audit trails for compliance purposes.</p>
+    ]]></content>
+    <pubDate>2025-08-09T09:15:00Z</pubDate>
+    <promoImage>e54c41a0-5df2-4ed1-a900-f042f42ff57f</promoImage>
+  </BlogPostPage>
+
+  <BlogPostPage>
+    <contentType>BlogPostPage</contentType>
+    <displayName>Building Headless Applications with Optimizely</displayName>
+    <Heading>Building Headless Applications with Optimizely</Heading>
+    <author>Emily Chen</author>
+    <SubHeading>A complete guide to building modern headless applications using Optimizely CMS as your content backend, including React, Vue, and Next.js examples.</SubHeading>
+    <content><![CDATA[
+      <h2>What is Headless CMS?</h2>
+      <p>A headless CMS separates content management from content presentation, allowing developers to use any frontend technology while leveraging a powerful content management backend.</p>
+      
+      <h2>Benefits of Going Headless</h2>
+      <ul>
+        <li>Technology flexibility</li>
+        <li>Better performance</li>
+        <li>Improved developer experience</li>
+        <li>Multi-channel content delivery</li>
+        <li>Easier scalability</li>
+      </ul>
+      
+      <h2>Implementation Strategies</h2>
+      <p>When building headless applications with Optimizely, consider these key strategies:</p>
+      
+      <h3>Content Modeling</h3>
+      <p>Design your content types with API consumption in mind. Think about how your content will be structured and accessed programmatically.</p>
+      
+      <h3>Caching & Performance</h3>
+      <p>Implement appropriate caching strategies at multiple levels to ensure optimal performance for your end users.</p>
+      
+      <h2>Popular Frontend Frameworks</h2>
+      <p>Optimizely works seamlessly with modern frontend frameworks like React, Vue.js, Angular, and Next.js. Choose the one that best fits your team's expertise and project requirements.</p>
+    ]]></content>
+    <pubDate>2025-08-08T16:45:00Z</pubDate>
+    <promoImage>685cf640-4b34-4cfd-8cdb-68b5ca24e25b</promoImage>
+  </BlogPostPage>
+
+  <BlogPostPage>
+    <contentType>BlogPostPage</contentType>
+    <displayName>Troubleshooting Common API Issues</displayName>
+    <Heading>Troubleshooting Common API Issues</Heading>
+    <author>David Rodriguez</author>
+    <SubHeading>Common issues developers face when working with the Optimizely CMS API and practical solutions to resolve them quickly and effectively.</SubHeading>
+    <content><![CDATA[
+      <h2>Authentication Problems</h2>
+      <p>Authentication issues are among the most common problems developers encounter. Here's how to diagnose and fix them:</p>
+      
+      <h3>Invalid Credentials</h3>
+      <ul>
+        <li>Verify your client ID and secret</li>
+        <li>Check token expiration</li>
+        <li>Ensure proper scope permissions</li>
+        <li>Validate the token endpoint URL</li>
+      </ul>
+      
+      <h2>CORS Issues</h2>
+      <p>Cross-Origin Resource Sharing (CORS) errors often occur in browser-based applications. The solution is to proxy API calls through your backend server.</p>
+      
+      <h2>Rate Limiting</h2>
+      <p>API rate limits protect the service from abuse. If you're hitting rate limits:</p>
+      <ul>
+        <li>Implement exponential backoff</li>
+        <li>Cache responses when possible</li>
+        <li>Batch operations efficiently</li>
+        <li>Monitor your API usage</li>
+      </ul>
+      
+      <h2>Content Validation Errors</h2>
+      <p>When creating or updating content, validation errors can occur. Always validate your payload against the content type schema before sending requests.</p>
+      
+      <h2>Debugging Tips</h2>
+      <p>Use browser developer tools, API testing tools like Postman, and comprehensive logging to identify and resolve issues quickly.</p>
+    ]]></content>
+    <pubDate>2025-08-07T11:20:00Z</pubDate>
+    <promoImage>e61f381b-4da8-4b09-acfb-54483581b191</promoImage>
+  </BlogPostPage>
+</BlogPosts>

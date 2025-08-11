@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BlogPosts>
+  <BlogPostPage>
+    <contentType>BlogPostPage</contentType>
+    <displayName>Getting Started with Optimizely CMS API</displayName>
+    <Heading>Getting Started with Optimizely CMS API</Heading>
+    <author>John Developer</author>
+    <SubHeading>Learn how to use the Optimizely CMS API to create and manage content programmatically. This comprehensive guide covers authentication, content creation, and best practices.</SubHeading>
+    <content><![CDATA[
+      <h2>Introduction</h2>
+      <p>The Optimizely CMS API provides a powerful way to manage content programmatically. Whether you're building integrations, automating content workflows, or creating headless applications, the API gives you full control over your content.</p>
+      
+      <h2>Key Features</h2>
+      <ul>
+        <li>RESTful API for easy integration</li>
+        <li>Support for all content types</li>
+        <li>Authentication via OAuth 2.0</li>
+        <li>Comprehensive content management capabilities</li>
+      </ul>
+      
+      <h2>Getting Started</h2>
+      <p>To get started with the API, you'll need to set up authentication and install the necessary SDK packages. This article will guide you through the process step by step.</p>
+      
+      <blockquote>
+        <p>Remember to always follow security best practices when working with API credentials.</p>
+      </blockquote>
+    ]]></content>
+    <pubDate>2025-08-11T10:00:00Z</pubDate>
+    <promoImage>c78900d7-bb25-412d-b20b-3a53b42ceae1</promoImage>
+  </BlogPostPage>
+</BlogPosts>

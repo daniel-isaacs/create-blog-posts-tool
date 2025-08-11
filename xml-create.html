@@ -363,11 +363,21 @@
         }
         
         function generateUUID() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                const r = Math.random() * 16 | 0;
-                const v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
+            // Use browser's crypto API if available, otherwise fallback to manual generation
+            let uuid;
+            if (crypto && crypto.randomUUID) {
+                uuid = crypto.randomUUID();
+            } else {
+                // Fallback: Generate a proper RFC 4122 version 4 UUID
+                uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    const r = Math.random() * 16 | 0;
+                    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16).toLowerCase();
+                });
+            }
+            
+            // Remove dashes to create a GUID without dashes
+            return uuid.replace(/-/g, '');
         }
         
         // File upload handling
@@ -516,13 +526,13 @@
                 // Title fields
                 heading: ['title', 'heading', 'name', 'displayName', 'Heading'],
                 // Subheading/description fields  
-                subheading: ['description', 'subheading', 'subtitle', 'summary', 'SubHeading'],
+                subheading: ['description', 'subheading', 'subtitle', 'summary', 'SubHeading', 'ArticleSubHeading'],
                 // Body/content fields
-                body: ['content', 'body', 'text', 'description', 'content:encoded', 'Body'],
+                body: ['content', 'body', 'text', 'description', 'content:encoded', 'Body', 'BlogPostBody', 'mainbody'],
                 // Author fields
-                author: ['author', 'creator', 'dc:creator', 'Author'],
+                author: ['author', 'creator', 'dc:creator', 'Author', 'ArticleAuthor'],
                 // Image fields
-                promoImage: ['image', 'thumbnail', 'media:thumbnail', 'enclosure', 'PromoImage'],
+                promoImage: ['image', 'thumbnail', 'media:thumbnail', 'enclosure', 'PromoImage', 'promoImage'],
                 // Date fields
                 pubDate: ['pubDate', 'published', 'date', 'dc:date'],
                 // URL fields
@@ -589,7 +599,7 @@
                     <p><strong>Subheading:</strong> ${article.subheading || 'None'}</p>
                     <p><strong>Author:</strong> ${article.author || 'Not specified'}</p>
                     <p><strong>Body Preview:</strong> ${(article.body || '').substring(0, 150)}${(article.body || '').length > 150 ? '...' : ''}</p>
-                    ${article.promoImage ? `<p><strong>Image:</strong> <a href="${article.promoImage}" target="_blank">View Image</a></p>` : ''}
+                    ${article.promoImage ? `<p><strong>Image:</strong> ${article.promoImage}</p>` : ''}
                     <div class="article-actions">
                         <button onclick="createSinglePost(${index})" style="background: linear-gradient(45deg, #28a745, #20c997); margin-right: 10px;">
                             📝 Create This Post
@@ -621,20 +631,18 @@
             // Remove trailing slash from CMS URL if present
             CMS_BASE_URL = CMS_BASE_URL.replace(/\/$/, '');
             
-            const tokenUrl = `${CMS_BASE_URL}/_cms/preview2/oauth/token`;
-            
             log('Requesting authentication token...');
             log(`CMS URL: ${CMS_BASE_URL}`);
             log(`Client ID: ${CLIENT_ID}`);
             
             const requestBody = {
-                grant_type: 'client_credentials',
-                client_id: CLIENT_ID,
-                client_secret: CLIENT_SECRET
+                clientId: CLIENT_ID,
+                clientSecret: CLIENT_SECRET,
+                cmsUrl: CMS_BASE_URL
             };
             
             try {
-                const response = await fetch(tokenUrl, {
+                const response = await fetch('/api/token', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -747,8 +755,17 @@
             CMS_BASE_URL = document.getElementById('cmsUrl').value.trim().replace(/\/$/, '');
             CONTAINER_UUID = document.getElementById('containerUuid').value.trim();
             
-            const contentUrl = `${CMS_BASE_URL}/_cms/preview2/content`;
             const contentTypeName = document.getElementById('contentTypeName').value;
+            
+            log(`Using article key: ${article.key}`);
+            
+            // Format promo image for CMS if it exists
+            let formattedPromoImage = '';
+            if (article.promoImage && article.promoImage.trim()) {
+                // Remove dashes from the promo image value
+                const cleanPromoImage = article.promoImage.trim().replace(/-/g, '');
+                formattedPromoImage = `cms://content/${cleanPromoImage}`;
+            }
             
             const blogPostData = {
                 key: article.key,
@@ -759,20 +776,28 @@
                 displayName: article.heading,
                 properties: {
                     Heading: article.heading,
-                    SubHeading: article.subheading || '',
-                    Body: article.body || '',
-                    Author: article.author || '',
-                    PromoImage: article.promoImage || ''
+                    ArticleSubHeading: article.subheading || '',
+                    BlogPostBody: article.body || '',
+                    ArticleAuthor: article.author || '',
+                    BlogPostPromoImage: formattedPromoImage,
+                    SeoSettings: {
+                        GraphType: "article"
+                    }
                 }
             };
+            console.log('Blog post data:', blogPostData);
+            const requestBody = {
+                accessToken: authToken,
+                cmsUrl: CMS_BASE_URL,
+                blogContent: blogPostData
+            };
             
-            const response = await fetch(contentUrl, {
+            const response = await fetch('/api/content', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${authToken}`
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(blogPostData)
+                body: JSON.stringify(requestBody)
             });
 
             if (!response.ok) {
