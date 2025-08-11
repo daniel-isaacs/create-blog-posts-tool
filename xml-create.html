@@ -641,7 +641,7 @@
             CMS_BASE_URL = document.getElementById('cmsUrl').value.trim() || config.cmsUrl || '';
             CLIENT_ID = document.getElementById('clientId').value.trim() || config.clientId || '';
             CLIENT_SECRET = document.getElementById('clientSecret').value.trim() || config.clientSecret || '';
-            CONTAINER_UUID = document.getElementById('containerUuid').value.trim() || config.containerUuid || '';
+            CONTAINER_UUID = (document.getElementById('containerUuid').value.trim() || config.containerUuid || '').replace(/-/g, '');
             
             // Validate configuration
             if (!CMS_BASE_URL || !CLIENT_ID || !CLIENT_SECRET || !CONTAINER_UUID) {
@@ -773,7 +773,7 @@
         async function createBlogPost(article) {
             // Ensure we have the latest configuration values from form or config
             CMS_BASE_URL = (document.getElementById('cmsUrl').value.trim() || config.cmsUrl || '').replace(/\/$/, '');
-            CONTAINER_UUID = document.getElementById('containerUuid').value.trim() || config.containerUuid || '';
+            CONTAINER_UUID = (document.getElementById('containerUuid').value.trim() || config.containerUuid || '').replace(/-/g, '');
             
             const contentTypeName = document.getElementById('contentTypeName').value;
             
