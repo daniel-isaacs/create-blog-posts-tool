@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XML Blog Post Creator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .upload-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+            text-align: center;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+            margin: 10px;
+        }
+        
+        .file-input-wrapper:hover {
+            transform: translateY(-2px);
+        }
+        
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+        
+        .file-info {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        
+        .config-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .config-section h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .log-area {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            border: 2px solid #333;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .preview-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .preview-content {
+            max-height: 400px;
+            overflow-y: auto;
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .articles-list {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .article-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            transition: border-color 0.3s ease;
+        }
+        
+        .article-item:hover {
+            border-color: #667eea;
+        }
+        
+        .article-item h4 {
+            margin-top: 0;
+            color: #495057;
+        }
+        
+        .article-actions {
+            margin-top: 15px;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📄 XML Blog Post Creator</h1>
+        
+        <div class="upload-section">
+            <h3>📁 Upload XML File</h3>
+            <p>Upload an XML file containing your blog post data</p>
+            
+            <label class="file-input-wrapper">
+                📤 Choose XML File
+                <input type="file" id="xmlFileInput" accept=".xml,text/xml,application/xml">
+            </label>
+            
+            <div id="fileInfo" class="file-info" style="display: none;"></div>
+        </div>
+        
+        <div class="config-section">
+            <h3>🔧 CMS Configuration</h3>
+            <div class="grid">
+                <div class="form-group">
+                    <label for="cmsUrl">CMS Instance URL:</label>
+                    <input type="text" id="cmsUrl" value="" placeholder="https://your-instance.cms.optimizely.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="containerUuid">Container UUID:</label>
+                    <input type="text" id="containerUuid" value="" placeholder="Enter your container UUID">
+                </div>
+                
+                <div class="form-group">
+                    <label for="clientId">Client ID:</label>
+                    <input type="text" id="clientId" value="" placeholder="Enter your client ID">
+                </div>
+                
+                <div class="form-group">
+                    <label for="clientSecret">Client Secret:</label>
+                    <input type="password" id="clientSecret" value="" placeholder="Enter your client secret">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="contentTypeName">Content Type Name:</label>
+                <input type="text" id="contentTypeName" value="BlogPostPage" placeholder="Enter your blog content type name">
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <button id="parseButton" disabled>
+                🔍 Parse XML File
+            </button>
+            <button id="authButton">
+                🔐 Test Authentication
+            </button>
+            <button id="createAllButton" disabled>
+                📝 Create All Posts
+            </button>
+            <button id="clearButton">
+                🗑️ Clear Log
+            </button>
+        </div>
+        
+        <div id="statusArea"></div>
+        
+        <div id="articlesSection" style="display: none;">
+            <div class="config-section">
+                <h3>📑 Parsed Articles</h3>
+                <div id="articlesList" class="articles-list"></div>
+            </div>
+        </div>
+        
+        <div class="config-section">
+            <h3>📊 Execution Log</h3>
+            <div id="logArea" class="log-area">Ready to process XML files...\n</div>
+        </div>
+    </div>
+
+    <script>
+        let CMS_BASE_URL = '';
+        let CLIENT_ID = '';
+        let CLIENT_SECRET = '';
+        let CONTAINER_UUID = '';
+        
+        let authToken = null;
+        let parsedArticles = [];
+        
+        function log(message, type = 'info') {
+            const logArea = document.getElementById('logArea');
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
+            logArea.textContent += `[${timestamp}] ${prefix} ${message}\n`;
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+        
+        function showStatus(message, type) {
+            const statusArea = document.getElementById('statusArea');
+            statusArea.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+        
+        function clearLog() {
+            document.getElementById('logArea').textContent = 'Log cleared...\n';
+            document.getElementById('statusArea').innerHTML = '';
+            parsedArticles = [];
+            document.getElementById('articlesSection').style.display = 'none';
+            updateButtonStates();
+        }
+        
+        function updateButtonStates() {
+            const fileSelected = document.getElementById('xmlFileInput').files.length > 0;
+            const articlesParsed = parsedArticles.length > 0;
+            
+            document.getElementById('parseButton').disabled = !fileSelected;
+            document.getElementById('createAllButton').disabled = !articlesParsed;
+        }
+        
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+        
+        // File upload handling
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const fileInfo = document.getElementById('fileInfo');
+                fileInfo.innerHTML = `
+                    <strong>Selected File:</strong> ${file.name}<br>
+                    <strong>Size:</strong> ${(file.size / 1024).toFixed(2)} KB<br>
+                    <strong>Type:</strong> ${file.type || 'Unknown'}
+                `;
+                fileInfo.style.display = 'block';
+                
+                log(`File selected: ${file.name} (${(file.size / 1024).toFixed(2)} KB)`);
+                updateButtonStates();
+            }
+        }
+        
+        // XML parsing functions
+        function parseXMLFile() {
+            const fileInput = document.getElementById('xmlFileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showStatus('❌ Please select an XML file first', 'error');
+                return;
+            }
+            
+            log('Reading XML file...');
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const xmlContent = e.target.result;
+                    log('XML file loaded successfully');
+                    log(`XML content length: ${xmlContent.length} characters`);
+                    
+                    // Parse the XML
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
+                    
+                    // Check for parsing errors
+                    const parserError = xmlDoc.getElementsByTagName('parsererror')[0];
+                    if (parserError) {
+                        throw new Error(`XML parsing error: ${parserError.textContent}`);
+                    }
+                    
+                    // Extract articles from XML
+                    extractArticlesFromXML(xmlDoc);
+                    
+                } catch (error) {
+                    log(`Error reading XML file: ${error.message}`, 'error');
+                    showStatus(`❌ Error parsing XML: ${error.message}`, 'error');
+                }
+            };
+            
+            reader.onerror = function() {
+                log('Error reading file', 'error');
+                showStatus('❌ Error reading file', 'error');
+            };
+            
+            reader.readAsText(file);
+        }
+        
+        function extractArticlesFromXML(xmlDoc) {
+            log('Extracting articles from XML...');
+            
+            // Common XML structures to try
+            const possibleItemSelectors = [
+                'item',           // RSS format
+                'entry',          // Atom format
+                'article',        // Custom article format
+                'post',           // Custom post format
+                'BlogPostPage',   // Custom BlogPost format
+                'ArticlePage'     // Optimizely format
+            ];
+            
+            let items = [];
+            
+            // Try different selectors
+            for (const selector of possibleItemSelectors) {
+                items = xmlDoc.getElementsByTagName(selector);
+                if (items.length > 0) {
+                    log(`Found ${items.length} items using selector: ${selector}`);
+                    break;
+                }
+            }
+            
+            if (items.length === 0) {
+                // Try to find any repeating elements
+                const allElements = xmlDoc.getElementsByTagName('*');
+                const elementCounts = {};
+                
+                for (let element of allElements) {
+                    const tagName = element.tagName;
+                    elementCounts[tagName] = (elementCounts[tagName] || 0) + 1;
+                }
+                
+                // Find the most common element (likely the item container)
+                let mostCommonElement = '';
+                let maxCount = 0;
+                for (const [tagName, count] of Object.entries(elementCounts)) {
+                    if (count > maxCount && count > 1) {
+                        maxCount = count;
+                        mostCommonElement = tagName;
+                    }
+                }
+                
+                if (mostCommonElement && maxCount > 1) {
+                    items = xmlDoc.getElementsByTagName(mostCommonElement);
+                    log(`Auto-detected ${maxCount} items using selector: ${mostCommonElement}`);
+                }
+            }
+            
+            if (items.length === 0) {
+                throw new Error('No articles found in XML. Please check the XML structure.');
+            }
+            
+            parsedArticles = [];
+            
+            // Extract data from each item
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                const article = extractArticleData(item, i);
+                if (article) {
+                    parsedArticles.push(article);
+                }
+            }
+            
+            log(`Successfully parsed ${parsedArticles.length} articles`, 'success');
+            showStatus(`✅ Parsed ${parsedArticles.length} articles from XML file`, 'success');
+            
+            displayParsedArticles();
+            updateButtonStates();
+        }
+        
+        function extractArticleData(item, index) {
+            const article = {
+                id: index + 1,
+                key: generateUUID()
+            };
+            
+            // Common field mappings
+            const fieldMappings = {
+                // Title fields
+                heading: ['title', 'heading', 'name', 'displayName', 'Heading'],
+                // Subheading/description fields  
+                subheading: ['description', 'subheading', 'subtitle', 'summary', 'SubHeading'],
+                // Body/content fields
+                body: ['content', 'body', 'text', 'description', 'content:encoded', 'Body'],
+                // Author fields
+                author: ['author', 'creator', 'dc:creator', 'Author'],
+                // Image fields
+                promoImage: ['image', 'thumbnail', 'media:thumbnail', 'enclosure', 'PromoImage'],
+                // Date fields
+                pubDate: ['pubDate', 'published', 'date', 'dc:date'],
+                // URL fields
+                url: ['link', 'url', 'guid']
+            };
+            
+            // Extract fields using mappings
+            for (const [targetField, possibleFields] of Object.entries(fieldMappings)) {
+                let value = '';
+                
+                for (const fieldName of possibleFields) {
+                    // Try direct child element
+                    const element = item.getElementsByTagName(fieldName)[0];
+                    if (element) {
+                        value = element.textContent || element.innerHTML || '';
+                        if (fieldName === 'content:encoded' || fieldName === 'Body') {
+                            // Keep HTML for content fields
+                            value = element.innerHTML || element.textContent || '';
+                        }
+                        break;
+                    }
+                    
+                    // Try attribute
+                    if (item.hasAttribute(fieldName)) {
+                        value = item.getAttribute(fieldName);
+                        break;
+                    }
+                    
+                    // For image fields, also check for URL attributes
+                    if (targetField === 'promoImage' && element) {
+                        value = element.getAttribute('url') || element.getAttribute('href') || value;
+                    }
+                }
+                
+                article[targetField] = value.trim();
+            }
+            
+            // Ensure we have at least a title
+            if (!article.heading) {
+                article.heading = `Article ${index + 1}`;
+            }
+            
+            // Clean up HTML in body if needed
+            if (article.body && article.body.includes('<')) {
+                // Basic HTML cleanup - remove script tags, etc.
+                article.body = article.body.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+            }
+            
+            log(`Extracted article: "${article.heading}"`);
+            return article;
+        }
+        
+        function displayParsedArticles() {
+            const articlesSection = document.getElementById('articlesSection');
+            const articlesList = document.getElementById('articlesList');
+            
+            articlesList.innerHTML = '';
+            
+            parsedArticles.forEach((article, index) => {
+                const articleDiv = document.createElement('div');
+                articleDiv.className = 'article-item';
+                articleDiv.innerHTML = `
+                    <h4>📄 ${article.heading || 'Untitled Article'}</h4>
+                    <p><strong>Subheading:</strong> ${article.subheading || 'None'}</p>
+                    <p><strong>Author:</strong> ${article.author || 'Not specified'}</p>
+                    <p><strong>Body Preview:</strong> ${(article.body || '').substring(0, 150)}${(article.body || '').length > 150 ? '...' : ''}</p>
+                    ${article.promoImage ? `<p><strong>Image:</strong> <a href="${article.promoImage}" target="_blank">View Image</a></p>` : ''}
+                    <div class="article-actions">
+                        <button onclick="createSinglePost(${index})" style="background: linear-gradient(45deg, #28a745, #20c997); margin-right: 10px;">
+                            📝 Create This Post
+                        </button>
+                        <button onclick="previewArticle(${index})" style="background: linear-gradient(45deg, #17a2b8, #138496);">
+                            👁️ Preview
+                        </button>
+                    </div>
+                `;
+                articlesList.appendChild(articleDiv);
+            });
+            
+            articlesSection.style.display = 'block';
+        }
+        
+        // Authentication functions
+        async function getAuthToken() {
+            // Get configuration values from the form
+            CMS_BASE_URL = document.getElementById('cmsUrl').value.trim();
+            CLIENT_ID = document.getElementById('clientId').value.trim();
+            CLIENT_SECRET = document.getElementById('clientSecret').value.trim();
+            CONTAINER_UUID = document.getElementById('containerUuid').value.trim();
+            
+            // Validate configuration
+            if (!CMS_BASE_URL || !CLIENT_ID || !CLIENT_SECRET || !CONTAINER_UUID) {
+                throw new Error('Please fill in all CMS configuration fields before authenticating.');
+            }
+            
+            // Remove trailing slash from CMS URL if present
+            CMS_BASE_URL = CMS_BASE_URL.replace(/\/$/, '');
+            
+            const tokenUrl = `${CMS_BASE_URL}/_cms/preview2/oauth/token`;
+            
+            log('Requesting authentication token...');
+            log(`CMS URL: ${CMS_BASE_URL}`);
+            log(`Client ID: ${CLIENT_ID}`);
+            
+            const requestBody = {
+                grant_type: 'client_credentials',
+                client_id: CLIENT_ID,
+                client_secret: CLIENT_SECRET
+            };
+            
+            try {
+                const response = await fetch(tokenUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Authentication failed: ${response.status} ${response.statusText}\n${errorText}`);
+                }
+
+                const data = await response.json();
+                authToken = data.access_token;
+                log('Authentication successful!', 'success');
+                log(`Token expires in: ${data.expires_in} seconds`);
+                return data.access_token;
+            } catch (error) {
+                log(`Authentication error: ${error.message}`, 'error');
+                throw error;
+            }
+        }
+        
+        async function testAuthentication() {
+            const button = document.getElementById('authButton');
+            const originalText = button.textContent;
+            
+            try {
+                button.disabled = true;
+                button.innerHTML = '<span class="loading"></span>Authenticating...';
+                
+                await getAuthToken();
+                showStatus('✅ Authentication successful! Token received and ready to use.', 'success');
+            } catch (error) {
+                showStatus(`❌ Authentication failed: ${error.message}`, 'error');
+            } finally {
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        }
+        
+        // Content creation functions
+        async function createSinglePost(index) {
+            const article = parsedArticles[index];
+            if (!article) return;
+            
+            try {
+                if (!authToken) {
+                    await getAuthToken();
+                }
+                
+                await createBlogPost(article);
+                showStatus(`✅ Successfully created post: "${article.heading}"`, 'success');
+            } catch (error) {
+                showStatus(`❌ Failed to create post: ${error.message}`, 'error');
+            }
+        }
+        
+        async function createAllPosts() {
+            const button = document.getElementById('createAllButton');
+            const originalText = button.textContent;
+            
+            if (parsedArticles.length === 0) {
+                showStatus('❌ No articles to create. Please parse an XML file first.', 'error');
+                return;
+            }
+            
+            try {
+                button.disabled = true;
+                button.innerHTML = '<span class="loading"></span>Creating Posts...';
+                
+                if (!authToken) {
+                    await getAuthToken();
+                }
+                
+                let successCount = 0;
+                let errorCount = 0;
+                
+                for (let i = 0; i < parsedArticles.length; i++) {
+                    const article = parsedArticles[i];
+                    log(`Creating post ${i + 1}/${parsedArticles.length}: "${article.heading}"`);
+                    
+                    try {
+                        await createBlogPost(article);
+                        successCount++;
+                        log(`✅ Created: "${article.heading}"`, 'success');
+                    } catch (error) {
+                        errorCount++;
+                        log(`❌ Failed to create "${article.heading}": ${error.message}`, 'error');
+                    }
+                    
+                    // Add a small delay between requests
+                    if (i < parsedArticles.length - 1) {
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                    }
+                }
+                
+                showStatus(`✅ Batch creation completed! Success: ${successCount}, Errors: ${errorCount}`, successCount > 0 ? 'success' : 'error');
+                
+            } catch (error) {
+                showStatus(`❌ Batch creation failed: ${error.message}`, 'error');
+            } finally {
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        }
+        
+        async function createBlogPost(article) {
+            // Ensure we have the latest configuration values
+            CMS_BASE_URL = document.getElementById('cmsUrl').value.trim().replace(/\/$/, '');
+            CONTAINER_UUID = document.getElementById('containerUuid').value.trim();
+            
+            const contentUrl = `${CMS_BASE_URL}/_cms/preview2/content`;
+            const contentTypeName = document.getElementById('contentTypeName').value;
+            
+            const blogPostData = {
+                key: article.key,
+                contentType: contentTypeName,
+                locale: 'en',
+                container: CONTAINER_UUID,
+                status: 'published',
+                displayName: article.heading,
+                properties: {
+                    Heading: article.heading,
+                    SubHeading: article.subheading || '',
+                    Body: article.body || '',
+                    Author: article.author || '',
+                    PromoImage: article.promoImage || ''
+                }
+            };
+            
+            const response = await fetch(contentUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(blogPostData)
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Content creation failed: ${response.status} ${response.statusText}\n${errorText}`);
+            }
+
+            const result = await response.json();
+            log(`Created content with ID: ${result.key}`);
+            return result;
+        }
+        
+        function previewArticle(index) {
+            const article = parsedArticles[index];
+            if (!article) return;
+            
+            const previewWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes');
+            previewWindow.document.write(`
+                <html>
+                <head>
+                    <title>Preview: ${article.heading}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
+                        h1 { color: #333; }
+                        h2 { color: #666; }
+                        .meta { color: #888; font-style: italic; }
+                        img { max-width: 100%; height: auto; }
+                    </style>
+                </head>
+                <body>
+                    <h1>${article.heading}</h1>
+                    ${article.subheading ? `<h2>${article.subheading}</h2>` : ''}
+                    <div class="meta">
+                        ${article.author ? `Author: ${article.author}<br>` : ''}
+                        ${article.pubDate ? `Published: ${article.pubDate}<br>` : ''}
+                    </div>
+                    ${article.promoImage ? `<img src="${article.promoImage}" alt="Promo Image"><br>` : ''}
+                    <div>${article.body || 'No content available'}</div>
+                </body>
+                </html>
+            `);
+            previewWindow.document.close();
+        }
+        
+        // Initialize event listeners
+        document.getElementById('xmlFileInput').addEventListener('change', handleFileSelect);
+        document.getElementById('parseButton').addEventListener('click', parseXMLFile);
+        document.getElementById('authButton').addEventListener('click', testAuthentication);
+        document.getElementById('createAllButton').addEventListener('click', createAllPosts);
+        document.getElementById('clearButton').addEventListener('click', clearLog);
+        
+        // Initialize
+        log('XML Blog Post Creator initialized and ready!');
+        log('Upload an XML file to get started.');
+        updateButtonStates();
+    </script>
+</body>
+</html>
